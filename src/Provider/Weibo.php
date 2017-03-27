@@ -17,7 +17,7 @@ class Weibo extends AbstractProvider
      *
      * @var string
      */
-    protected $baseUrl = 'https://api.weibo.com/';
+    public $baseUrl = 'https://api.weibo.com/';
 
     /**
      * Current API version
