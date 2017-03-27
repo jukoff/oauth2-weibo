@@ -17,7 +17,7 @@ class Weibo extends AbstractProvider
      *
      * @var string
      */
-    public $baseUrl = 'https://api.weibo.com/';
+    const BASE_API_URL = 'https://api.weibo.com/';
 
     /**
      * Current API version
@@ -51,7 +51,7 @@ class Weibo extends AbstractProvider
      */
     public function getBaseAuthorizationUrl()
     {
-        return $this->baseUrl . 'oauth2/authorize';
+        return self::BASE_API_URL . 'oauth2/authorize';
     }
 
     /**
@@ -59,7 +59,7 @@ class Weibo extends AbstractProvider
      */
     public function getBaseAccessTokenUrl(array $params)
     {
-        return $this->baseUrl . 'oauth2/access_token';
+        return self::BASE_API_URL . 'oauth2/access_token';
     }
 
     /**
@@ -71,7 +71,7 @@ class Weibo extends AbstractProvider
             'access_token' => $token->getToken(),
         ];
 
-        return $this->baseUrl . $this->currentApiVersion . '/users/show.json?' . http_build_query($parameters);
+        return self::BASE_API_URL . $this->currentApiVersion . '/users/show.json?' . http_build_query($parameters);
     }
 
     /**
