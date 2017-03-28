@@ -65,13 +65,63 @@ class Weibo extends AbstractProvider
     /**
      * {@inheritdoc}
      */
-    public function getResourceOwnerDetailsUrl(AccessToken $token)
+    public function getResourceOwnerDetailsUrl(AccessToken $token, $uid = null)
+    {
+        $parameters = [
+            'access_token' => $token->getToken(),
+            'uid' => (int) $uid,
+        ];
+
+        return self::BASE_API_URL . $this->currentApiVersion . '/users/show.json?' . http_build_query($parameters);
+    }
+
+    /**
+     * Returns resource owner ID
+     *
+     * @param AccessToken $token
+     *
+     * @return string
+     */
+    protected function getResourceOwnerId(AccessToken $token)
     {
         $parameters = [
             'access_token' => $token->getToken(),
         ];
 
-        return self::BASE_API_URL . $this->currentApiVersion . '/users/show.json?' . http_build_query($parameters);
+        return self::BASE_API_URL . $this->currentApiVersion . '/account/get_uid.json?' . http_build_query($parameters);
+    }
+
+    /**
+     * Requests resource owner details.
+     *
+     * @param  AccessToken $token
+     * @return mixed
+     */
+    protected function fetchResourceOwnerDetails(AccessToken $token)
+    {
+        $uid = $this->getUid($token);
+
+        $url = $this->getResourceOwnerDetailsUrl($token, $uid['uid']);
+
+        $request = $this->getAuthenticatedRequest(self::METHOD_GET, $url, $token);
+
+        return $this->getResponse($request);
+    }
+
+    /**
+     * Returns user id data from API
+     *
+     * @param AccessToken $token
+     *
+     * @return mixed
+     */
+    protected function getUid(AccessToken $token)
+    {
+        $url = $this->getResourceOwnerId($token);
+
+        $request = $this->getRequest(self::METHOD_GET, $url);
+
+        return $this->getResponse($request);
     }
 
     /**
